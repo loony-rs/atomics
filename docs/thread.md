@@ -1,0 +1,15 @@
+### Thead ID
+
+Thread ID The Rust standard library assigns every thread a unique identifier. This identifier is accessible through Thread::id() and is of the type ThreadId. There’s not much you can do with a ThreadId other than copying it around and checking for equality. There is no guarantee that these IDs will be assigned consecutively, only that they will be different for each thread.
+
+### Output Locking
+
+Thread ID The Rust standard library assigns every thread a unique identifier. This identifier is accessible through Thread::id() and is of the type ThreadId. There’s not much you can do with a ThreadId other than copying it around and checking for equality. There is no guarantee that these IDs will be assigned consecutively, only that they will be different for each thread.
+
+### Thread Builder
+
+Thread Builder The std::thread::spawn function is actually just a convenient shorthand for std::thread::Builder::new().spawn().unwrap(). A std::thread::Builder allows you to set some settings for the new thread before spawning it. You can use it to configure the stack size for the new thread and to give the new thread a name. The name of a thread is available through std::thread::current().name(), will be used in panic messages, and will be visible in monitoring and debugging tools on most platforms. Additionally, Builder’s spawn function returns an std::io::Result, allowing you to handle situations where spawning a new thread fails. This might happen if the operating system runs out of memory, or if resource limits have been applied to your program. The std::thread::spawn function simply panics if it is unable to spawn a new thread.
+
+### The Leakpocalypse
+
+Before Rust 1.0, the standard library had a function named std::thread::scoped that would directly spawn a thread, just like std::thread::spawn. It allowed non-'static captures, because instead of a JoinHandle, it returned a JoinGuard which joined the thread when dropped. Any borrowed data only needed to outlive this JoinGuard. This seemed safe, as long as the JoinGuard got dropped at some point. Just before the release of Rust 1.0, it slowly became clear that it’s not possible to guarantee that something will be dropped. There are many ways, such as creating a cycle of reference-counted nodes, that make it possible to forget about something, or leak it, without dropping it. Eventually, in what some people refer to as “The Leakpocalypse,” the conclusion was made that the design of a (safe) interface cannot rely on the assumption that objects will always be dropped at the end of their lifetime. Leaking an object might reasonably result in leaking more objects (e.g., leaking a Vec will also leak its elements), but it may not result in undefined behavior. Because of this conclusion, std::thread::scoped was no longer deemed safe and was removed from the standard library. Additionally, std::mem::forget was upgraded from an unsafe function to a safe function, to emphasize that forgetting (or leaking) is always a possibility. Only much later, in Rust 1.63, a new std::thread::scope function was added with a new design that does not rely on Drop for correctness.
