@@ -1,8 +1,6 @@
-mod thread;
-mod owner_ref;
-mod mutation;
+mod basics;
 
 fn main() {
-    mutation::l_interior_mut();
+    basics::mutation::l_interior_mut();
 }
 
