@@ -1,6 +1,7 @@
 mod basics;
+mod atomics;
 
 fn main() {
-    basics::mutation::l_interior_mut();
+    atomics::load_store::l_load_store_usize();
 }
 
