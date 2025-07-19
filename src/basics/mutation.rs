@@ -1,21 +1,8 @@
 use std::cell::{Cell, RefCell};
 
-pub(crate) fn l_interior_mut() {
-    let a = Cell::new(10);
-    l_cell(&a, &a);
-
-    let a = RefCell::new(100);
-    l_ref_cell(&a, &a);
-}
-
 fn l_cell(a: &Cell<i32>, b: &Cell<i32>) {
     let before = a.get();
     b.set(b.get() + 1);
-    let after = a.get();
-
-    if before != after {
-        println!("Cell: {}", before != after);
-    }
 }
 
 fn l_ref_cell(a: &RefCell<i32>, b: &RefCell<i32>) {
@@ -36,5 +23,20 @@ fn l_ref_cell(a: &RefCell<i32>, b: &RefCell<i32>) {
 
     if before_val != after_val {
         println!("RefCell: {}", before_val != after_val);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_interior_mut() {
+        let a = Cell::new(10);
+        let b = Cell::new(10);
+
+        l_cell(&a, &a);
+        
+        assert_eq!(a.get(), b.get() + 1);
     }
 }

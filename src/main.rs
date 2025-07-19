@@ -1,7 +1,6 @@
-mod basics;
 mod atomics;
+use atomics::{load_store, fetch};
 
 fn main() {
-    atomics::load_store::l_load_store_usize();
+    fetch::l_fetch_add();
 }
-

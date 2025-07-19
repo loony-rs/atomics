@@ -1,3 +1,6 @@
+/// Learn this
+/// std::sync::Once and std::sync::OnceLock
+
 use std::sync::atomic::{AtomicBool, AtomicUsize};
 use std::sync::atomic::Ordering::Relaxed;
 use std::thread;
